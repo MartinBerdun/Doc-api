@@ -1,0 +1,102 @@
+paths :  #en este archivo se manejan las siguientes rutas (swagger lo hace)
+  /api/users/: #aca se especifica la ruta en donde estan los endpoints
+    get: #que verbo http se puede usar
+      summary: Obtiene todos los usuarios #resumen de lo que hace el enpoint
+      tags:
+        - Users
+      responses:
+        "200": 
+          description: Los usuarios fueron obtenidos exitosamente desde la base de datos
+          content: #arroja como un ejemplo al hacer el endpoint
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: "#components/schemas/User" #hace referencia al schema de abajo que esta en components
+        "500":
+          description: Error en la conexion con la base de datos
+  /api/users/{uid}:
+    get:
+      summary: Obtiene un solo usuario a partir de su id
+      tags:
+        - Users
+      parameters:
+      - name : uid
+        in: path
+        required: true
+        description: Id del usuario que se desea solicitar
+        schema:
+          $type: string
+      responses:
+        "200":
+          description: Usuario encontrado
+          content:
+            application/json:
+              $ref: '#components/schemas/User'
+        "404":
+          description: Error en la conexion con la base de datos
+    put:
+      summary: Actaliza un usuario a partir de su id
+      tags:
+        - Users
+      parameters:
+        - name : uid
+          in: path
+          required: true
+          description: Id de usuario que se desea actualizar
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#components/requestBodies/updateUser'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de mongo
+        first_name:
+          type: string
+          description: Nombre del usuario
+        last_name:
+          type: string
+          description: Apellido del usuario
+        email:
+          type: string
+          description: Email del usuario. este es unico
+        password:
+          type: string
+          description: Password del usuario
+      example:
+        _id: ObjectId(cbcuwnwe78943h3ut34bg43ut3)
+        first_name: Martin
+        last_name: Berdun
+        email: martin@correo.com
+        password: ebglbbñbefboejp65n76j5b8j56n7k45
+  requestBodies:
+    updateUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Nombre del usuario
+        last_name:
+          type: string
+          description: Apellido del usuario
+        email:
+          type: string
+          description: Email del usuario
+        password:
+          type: string
+          description: Password del usuario. Posteriormente hasheada
+      example:
+        first_name: marisol
+        last_name: correa
+        email: mar@gmail.com
+        password: mar123

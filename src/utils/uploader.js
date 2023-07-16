@@ -1,4 +1,4 @@
-import __dirname from "./index.js";
+import __dirname from "../dirname.js";
 import multer from 'multer';
 
 const storage = multer.diskStorage({
